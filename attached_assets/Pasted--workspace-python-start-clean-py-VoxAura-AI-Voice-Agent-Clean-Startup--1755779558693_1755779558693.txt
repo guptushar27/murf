@@ -1,0 +1,62 @@
+~/workspace$ python start_clean.py
+🚀 VoxAura AI Voice Agent - Clean Startup
+============================================================
+2025-08-21 12:31:11,267 - INFO - Installing system dependencies...
+2025-08-21 12:31:13,763 - INFO - ✅ System dependencies handled
+2025-08-21 12:31:13,764 - INFO - Cleaning Python environment...
+2025-08-21 12:31:17,566 - INFO - ✅ Environment cleaned
+2025-08-21 12:31:17,566 - INFO - Installing Python dependencies...
+2025-08-21 12:31:21,640 - INFO - Installing pydantic==2.5.3...
+2025-08-21 12:31:25,202 - INFO - Installing pydantic-core==2.14.6...
+2025-08-21 12:31:26,721 - INFO - Installing flask==3.1.0...
+2025-08-21 12:31:29,948 - INFO - Installing flask-socketio==5.4.1...
+2025-08-21 12:31:32,188 - INFO - Installing flask-sqlalchemy==3.1.1...
+2025-08-21 12:31:34,068 - INFO - Installing sqlalchemy==2.0.36...
+2025-08-21 12:31:38,481 - INFO - Installing assemblyai==0.33.0...
+2025-08-21 12:31:40,567 - INFO - Installing google-generativeai==0.8.3...
+2025-08-21 12:31:43,656 - INFO - Installing websockets==13.1...
+2025-08-21 12:31:45,792 - INFO - Installing requests==2.32.3...
+2025-08-21 12:31:47,649 - INFO - Installing gtts==2.5.4...
+2025-08-21 12:31:49,082 - INFO - Installing python-engineio==4.9.1...
+2025-08-21 12:31:50,944 - INFO - Installing python-socketio==5.11.4...
+2025-08-21 12:31:53,191 - INFO - ✅ Python dependencies installed
+2025-08-21 12:31:53,192 - INFO - 🧪 VoxAura Import Test
+2025-08-21 12:31:53,192 - INFO - ========================================
+2025-08-21 12:31:53,428 - INFO - ✅ flask Flask web framework
+2025-08-21 12:31:53,552 - INFO - ✅ flask_socketio WebSocket support
+2025-08-21 12:31:53,556 - INFO - ✅ pydantic Data validation
+2025-08-21 12:31:53,764 - INFO - ✅ assemblyai Speech-to-text
+2025-08-21 12:31:53,811 - ERROR - ❌ google.generativeai: libstdc++.so.6: cannot open shared object file: No such file or directory
+2025-08-21 12:31:53,811 - INFO - ✅ websockets WebSocket client
+2025-08-21 12:31:53,811 - INFO - ✅ requests HTTP client
+2025-08-21 12:31:53,941 - INFO - ✅ sqlalchemy Database ORM
+2025-08-21 12:31:53,941 - INFO - ========================================
+❌ Import failures: ['google.generativeai']
+~/workspace$ python app.py
+Traceback (most recent call last):
+  File "/home/runner/workspace/app.py", line 22, in <module>
+    from services.llm_service import LLMService
+  File "/home/runner/workspace/services/llm_service.py", line 8, in <module>
+    import google.generativeai as genai
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/google/generativeai/__init__.py", line 45, in <module>
+    from google.generativeai import caching
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/google/generativeai/caching.py", line 21, in <module>
+    from google.generativeai import protos
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/google/generativeai/protos.py", line 74, in <module>
+    from google.ai.generativelanguage_v1beta.types import *
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/google/ai/generativelanguage_v1beta/__init__.py", line 21, in <module>
+    from .services.cache_service import CacheServiceAsyncClient, CacheServiceClient
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/google/ai/generativelanguage_v1beta/services/cache_service/__init__.py", line 16, in <module>
+    from .async_client import CacheServiceAsyncClient
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/google/ai/generativelanguage_v1beta/services/cache_service/async_client.py", line 32, in <module>
+    from google.api_core import gapic_v1
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/google/api_core/gapic_v1/__init__.py", line 16, in <module>
+    from google.api_core.gapic_v1 import config
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/google/api_core/gapic_v1/config.py", line 23, in <module>
+    import grpc
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/grpc/__init__.py", line 22, in <module>
+    from grpc import _compression
+  File "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/grpc/_compression.py", line 20, in <module>
+    from grpc._cython import cygrpc
+ImportError: libstdc++.so.6: cannot open shared object file: No such file or directory
+~/workspace$ 

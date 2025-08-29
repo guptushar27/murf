@@ -1,0 +1,52 @@
+~/workspace$ python start_clean.py
+🚀 VoxAura AI Voice Agent - Clean Startup
+============================================================
+2025-08-21 12:24:32,656 - INFO - Installing system dependencies...
+2025-08-21 12:24:32,723 - WARNING - Could not install system deps (may not have sudo): Command '['apt-get', 'update']' returned non-zero exit status 1.
+2025-08-21 12:24:32,724 - INFO - Installing Python dependencies...
+2025-08-21 12:24:38,874 - INFO - ✅ Python dependencies installed
+2025-08-21 12:24:39,339 - INFO - ✅ flask
+2025-08-21 12:24:39,665 - INFO - ✅ flask_socketio
+2025-08-21 12:24:39,672 - ERROR - ❌ pydantic: No module named 'pydantic_core._pydantic_core'
+2025-08-21 12:24:39,696 - ERROR - ❌ assemblyai: No module named 'pydantic_core._pydantic_core'
+2025-08-21 12:24:39,908 - ERROR - ❌ google.generativeai: libstdc++.so.6: cannot open shared object file: No such file or directory
+❌ Import failures: ['pydantic', 'assemblyai', 'google.generativeai']
+~/workspace$ python app.py
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/assemblyai/types.py", line 22, in <module>
+    from pydantic import UUID4, BaseModel, ConfigDict, Field, field_validator
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/pydantic/__init__.py", line 5, in <module>
+    from ._migration import getattr_migration
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/pydantic/_migration.py", line 4, in <module>
+    from .version import version_short
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/pydantic/version.py", line 5, in <module>
+    from pydantic_core import __version__ as __pydantic_core_version__
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/pydantic_core/__init__.py", line 6, in <module>
+    from ._pydantic_core import (
+ModuleNotFoundError: No module named 'pydantic_core._pydantic_core'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/workspace/app.py", line 21, in <module>
+    from services.stt_service import STTService
+  File "/home/runner/workspace/services/stt_service.py", line 9, in <module>
+    import assemblyai as aai
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/assemblyai/__init__.py", line 1, in <module>
+    from . import extras
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/assemblyai/extras.py", line 5, in <module>
+    from . import api
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/assemblyai/api.py", line 6, in <module>
+    from . import types
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/assemblyai/types.py", line 28, in <module>
+    from pydantic.v1 import UUID4, BaseModel, BaseSettings, ConfigDict, Field, validator
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/pydantic/__init__.py", line 5, in <module>
+    from ._migration import getattr_migration
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/pydantic/_migration.py", line 4, in <module>
+    from .version import version_short
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/pydantic/version.py", line 5, in <module>
+    from pydantic_core import __version__ as __pydantic_core_version__
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/pydantic_core/__init__.py", line 6, in <module>
+    from ._pydantic_core import (
+ModuleNotFoundError: No module named 'pydantic_core._pydantic_core'
+~/workspace$ 

@@ -1,0 +1,37 @@
+error:🚀 Initializing VoxAura Client...
+/agent/chat/voxaura_1755784956503_99g7ev4rov/history:1 Failed to load resource: the server responded with a status of 404 (Not Found)Understand this error
+/agent/chat/voxaura_1755784956503_99g7ev4rov/history:1 Failed to load resource: the server responded with a status of 404 (Not Found)Understand this error
+VM12:61 Connected to WebSocket server
+VM12:62 ✅ DAY 19: Main app connected to WebSocket
+VM12:68 Connected to WebSocket server
+VM12:69 ✅ DAY 19: Main app connected to WebSocket
+VM12:1180 [VoxAuraClient] ✅ WebSocket Connected
+/favicon.ico:1 Failed to load resource: the server responded with a status of 404 (Not Found)Understand this error
+VM12:537 POST https://c0b3c511-b026-434c-a73f-a8b4d35609d7-00-56my64k0gidi.sisko.replit.dev/llm/query 404 (Not Found)
+sendTextMessage @ VM12:537
+handleTextInputKeypress @ VM12:519Understand this error
+VM12:556 Text message error: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON and another error: Collecting assemblyai==0.42.1 (from -r requirements.txt (line 7))
+Using cached assemblyai-0.42.1-py3-none-any.whl.metadata (27 kB)
+ERROR: Cannot install -r requirements.txt (line 9) and pydantic-core==2.27.1 because these package versions have conflicting dependencies.
+
+The conflict is caused by:
+The user requested pydantic-core==2.27.1
+pydantic 2.9.2 depends on pydantic-core==2.23.4
+
+To fix this you could try to:
+1. loosen the range of package versions you've specified
+2. remove package versions to allow pip to attempt to solve the dependency conflict
+
+ERROR: ResolutionImpossible: for help visit https://pip.pypa.io/en/latest/topics/dependency-resolution/#dealing-with-dependency-conflicts
+exit status 1 and error: ERROR:werkzeug:Error on request:
+Traceback (most recent call last):
+File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/werkzeug/serving.py", line 364, in run_wsgi
+execute(self.server.app)
+File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/werkzeug/serving.py", line 330, in execute
+write(b"")
+File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/werkzeug/serving.py", line 255, in write
+assert status_set is not None, "write() before start_response"
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: write() before start_response . please fix all these error and fix this also :  python app.py
+python: can't open file '/home/runner/workspace/app.py': [Errno 2] No such file or directory
+~/workspace$ 
