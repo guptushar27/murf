@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>VoxAura - Streaming Audio Test (Day 16 & 17)</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+        <script src="{{ url_for('static', filename='js/streaming-audio.js') }}" defer></script>
+
+
+        <style>
+            .streaming-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+            .control-panel {
+                background: #f8f9fa;
+                border-radius: 10px;
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            .status-display {
+                min-height: 100px;
+                border: 2px dashed #dee2e6;
+                border-radius: 8px;
+                padding: 15px;
+                background: #ffffff;
+            }
+            .transcription-output {
+                height: 400px;
+                overflow-y: auto;
+                border: 1px solid #dee2e6;
+                border-radius: 8px;
+                padding: 15px;
+                background: #ffffff;
+            }
+            .transcription-item {
+                transition: all 0.3s ease;
+            }
+            .btn-streaming {
+                background: linear-gradient(45deg, #007bff, #0056b3);
+                border: none;
+                color: white;
+            }
+            .btn-streaming:hover {
+                background: linear-gradient(45deg, #0056b3, #004085);
+                color: white;
+            }
+            .recording-indicator {
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                background: #dc3545;
+                border-radius: 50%;
+                animation: pulse 1.5s infinite;
+            }
+            @keyframes pulse {
+                0% {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+                50% {
+                    opacity: 0.5;
+                    transform: scale(1.1);
+                }
+                100% {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+            .task-badge {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: linear-gradient(45deg, #28a745, #20c997);
+                color: white;
+                padding: 5px 10px;
+                border-radius: 20px;
+                font-size: 0.8em;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="streaming-container">
+            <div class="task-badge">Day 16 & 17 Tasks</div>
+
+            <h1 class="text-center mb-4">
+                <i class="fas fa-broadcast-tower text-primary me-2"></i>
+                VoxAura Streaming Audio Test
+            </h1>
+
+            <div class="row">
+                <!-- Control Panel -->
+                <div class="col-md-6">
+                    <div class="control-panel">
+                        <h3>
+                            <i class="fas fa-sliders-h me-2"></i>
+                            Streaming Controls
+                        </h3>
+
+                        <!-- Day 16: Audio Streaming -->
+                        <div class="mb-4">
+                            <h5 class="text-primary">
+                                <i class="fas fa-microphone me-2"></i>
+                                Day 16: Audio Streaming
+                            </h5>
+                            <p class="text-muted small">
+                                Stream and save audio data to server
+                            </p>
+
+                            <div class="d-grid gap-2">
+                                <button
+                                    id="startStream"
+                                    class="btn btn-streaming btn-lg"
+                                >
+                                    <i class="fas fa-play me-2"></i>
+                                    Start Audio Streaming
+                                </button>
+                                <button
+                                    id="stopStream"
+                                    class="btn btn-outline-danger btn-lg"
+                                    disabled
+                                >
+                                    <i class="fas fa-stop me-2"></i>
+                                    Stop Audio Streaming
+                                </button>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <!-- Day 17: Real-time Transcription -->
+                        <div class="mb-4">
+                            <h5 class="text-success">
+                                <i class="fas fa-closed-captioning me-2"></i>
+                                Day 17: Real-time Transcription
+                            </h5>
+                            <p class="text-muted small">
+                                Stream audio + AssemblyAI transcription
+                            </p>
+
+                            <div class="d-grid gap-2">
+                                <button
+                                    id="startTranscription"
+                                    class="btn btn-success btn-lg"
+                                >
+                                    <i class="fas fa-microphone-alt me-2"></i>
+                                    Start Streaming + Transcription
+                                </button>
+                                <button
+                                    id="stopTranscription"
+                                    class="btn btn-outline-secondary btn-lg"
+                                    disabled
+                                >
+                                    <i class="fas fa-pause me-2"></i>
+                                    Stop Transcription
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status Display -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Status & Logs
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="streamingStatus" class="status-display">
+                                <div class="text-center text-muted">
+                                    <i
+                                        class="fas fa-circle-notch fa-spin fa-2x mb-3"
+                                    ></i>
+                                    <p>Connecting to server...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transcription Output -->
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-scroll me-2"></i>
+                                Real-time Transcription Output
+                            </h5>
+                            <small class="text-muted"
+                                >AssemblyAI Streaming Results</small
+                            >
+                        </div>
+                        <div class="card-body p-0">
+                            <div
+                                id="transcriptionOutput"
+                                class="transcription-output"
+                            >
+                                <div class="text-center text-muted p-4">
+                                    <i
+                                        class="fas fa-comment-dots fa-3x mb-3 opacity-50"
+                                    ></i>
+                                    <p>
+                                        Start transcription to see real-time
+                                        results...
+                                    </p>
+                                    <small
+                                        >Partial and final transcriptions will
+                                        appear here</small
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button
+                                class="btn btn-outline-secondary btn-sm"
+                                onclick="clearTranscriptions()"
+                            >
+                                <i class="fas fa-trash me-1"></i>
+                                Clear Transcriptions
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instructions -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-question-circle me-2"></i>
+                                Testing Instructions
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="text-primary">
+                                        Day 16 Testing:
+                                    </h6>
+                                    <ol>
+                                        <li>Click "Start Audio Streaming"</li>
+                                        <li>Speak into your microphone</li>
+                                        <li>
+                                            Watch status for chunk confirmations
+                                        </li>
+                                        <li>
+                                            Audio saved to
+                                            <code>instance/audio_streams/</code>
+                                        </li>
+                                        <li>
+                                            Click "Stop Audio Streaming" when
+                                            done
+                                        </li>
+                                    </ol>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-success">
+                                        Day 17 Testing:
+                                    </h6>
+                                    <ol>
+                                        <li>
+                                            Click "Start Streaming +
+                                            Transcription"
+                                        </li>
+                                        <li>Speak clearly into microphone</li>
+                                        <li>
+                                            Watch for partial transcriptions
+                                            (yellow)
+                                        </li>
+                                        <li>
+                                            See final transcriptions (green)
+                                        </li>
+                                        <li>
+                                            Check server console for printed
+                                            output
+                                        </li>
+                                    </ol>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info mt-3">
+                                <i class="fas fa-lightbulb me-2"></i>
+                                <strong>Day 17 Testing:</strong> 
+                                <ol class="small mb-2">
+                                    <li>Click "Start Streaming + Transcription"</li>
+                                    <li>Speak clearly into microphone</li>
+                                    <li>Watch transcriptions appear in real-time</li>
+                                    <li>Check server console for detailed logs</li>
+                                </ol>
+                                
+                                <strong>Day 18 Testing:</strong>
+                                <ol class="small mb-2">
+                                    <li>Start transcription as above</li>
+                                    <li>Speak a sentence, then pause for 1-2 seconds</li>
+                                    <li>Watch for blue "Turn Detected" notifications</li>
+                                    <li>Check console for "DAY 18 TURN DETECTION" messages</li>
+                                </ol>
+                                
+                                <strong>Console Output:</strong> Server console will show:
+                                <code>📝 DAY 17 TRANSCRIPTION OUTPUT</code> and 
+                                <code>🎯 DAY 18 TURN DETECTION</code>
+                            </div>
+                            
+                            <!-- Day 18: Turn Detection Status -->
+                            <div class="card mt-3">
+                                <div class="card-header">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-hand-paper me-2"></i>
+                                        Turn Detection (Day 18)
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="small mb-1">
+                                        Turn detection monitors silence periods to determine when you stop talking.
+                                        Blue notifications will appear when turns are detected.
+                                    </p>
+                                    <div class="badge bg-primary">
+                                        <i class="fas fa-check-circle me-1"></i>
+                                        Turn Detection Enabled
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <script>
+            let ws;
+            let mediaRecorder;
+
+            function clearTranscriptions() {
+                const output = document.getElementById("transcriptionOutput");
+                if (output) {
+                    output.innerHTML = `
+                        <div class="text-center text-muted p-4">
+                            <i class="fas fa-comment-dots fa-3x mb-3 opacity-50"></i>
+                            <p>Transcriptions cleared. Start transcription to see new results...</p>
+                        </div>
+                    `;
+                }
+            }
+
+            // Generate session ID
+            window.sessionId =
+                "stream_" + Math.random().toString(36).substr(2, 9);
+            console.log("Session ID:", window.sessionId);
+
+            function startStreaming() {
+                const sessionId = window.sessionId;
+                console.log("🎤 Starting streaming with session:", sessionId);
+
+                // Connect to Flask WebSocket at /ws
+                ws = new WebSocket(
+                    `${location.origin.replace(/^http/, "ws")}/ws`,
+                );
+
+                ws.onopen = () => {
+                    console.log("✅ WebSocket connected");
+                    ws.send(
+                        JSON.stringify({ type: "session_start", sessionId }),
+                    );
+                    startRecording();
+                };
+
+                ws.onmessage = (event) => {
+                    console.log("📩 Message from server:", event.data);
+                    try {
+                        const msg = JSON.parse(event.data);
+                        if (msg.transcription) {
+                            updateTranscription(msg.transcription);
+                        }
+                    } catch {
+                        console.log("Raw:", event.data);
+                    }
+                };
+
+                ws.onclose = () => {
+                    console.log("❌ WebSocket closed");
+                };
+            }
+
+            function startRecording() {
+                navigator.mediaDevices
+                    .getUserMedia({ audio: true })
+                    .then((stream) => {
+                        mediaRecorder = new MediaRecorder(stream, {
+                            mimeType: "audio/webm",
+                        });
+                        mediaRecorder.ondataavailable = (event) => {
+                            if (
+                                event.data.size > 0 &&
+                                ws.readyState === WebSocket.OPEN
+                            ) {
+                                ws.send(event.data);
+                            }
+                        };
+                        mediaRecorder.start(250); // send every 250ms
+                    });
+            }
+
+            function stopStreaming() {
+                if (mediaRecorder) {
+                    mediaRecorder.stop();
+                }
+                if (ws) {
+                    ws.close();
+                }
+            }
+
+            function updateTranscription(text) function updateTranscription(text) {
+                console.log("📝 Transcription:", text); // <-- log to console also
+
+                const output = document.getElementById("transcriptionOutput");
+                if (output) {
+                    const p = document.createElement("p");
+                    p.textContent = text;
+                    output.appendChild(p);
+                }
+            }
+
+
+            function sendTestMessage() {
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    ws.send("Hello from client!");
+                } else {
+                    console.log("⚠️ WebSocket is not open");
+                }
+            }
+
+            // 👇 Expose functions globally so they can be called in the console
+            window.startStreaming = startStreaming;
+            window.stopStreaming = stopStreaming;
+            window.sendTestMessage = sendTestMessage;
+            window.clearTranscriptions = clearTranscriptions;
+        </script> -->
+    </body>
+</html>
