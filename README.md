@@ -19,7 +19,6 @@
 - **📡 Real-time Communication** - WebSocket-powered streaming for instant responses
 
 ### 🎨 Modern Interface Features
-- **💬 ChatGPT-style Interface** - Familiar chat layout with message bubbles and modern design
 - **📱 Responsive Sidebar** - Collapsible sidebar with chat history, search, and new chat functionality
 - **✨ Animated Star Background** - Interactive starfield with mouse-responsive movement and pulsing effects
 - **🌊 Wave Processing Animation** - Beautiful wave effects during AI processing
